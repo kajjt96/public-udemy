@@ -16,23 +16,25 @@ public class AccountController(DataContext dataContext, ITokenService tokenServi
     {
         if (await UserExistsAsync(registerDto.Username)) return BadRequest("Username is taken");
         
-        using HMACSHA512 hmacsha512 = new HMACSHA512();
+        return Ok();
 
-        AppUser appUser = new AppUser
-        {
-            UserName = registerDto.Username.ToLower(),
-            PasswordHash = hmacsha512.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
-            PasswordSalt = hmacsha512.Key
-        };
+        // using HMACSHA512 hmacsha512 = new HMACSHA512();
 
-        dataContext.Users.Add(appUser);
-        await dataContext.SaveChangesAsync();
+        // AppUser appUser = new AppUser
+        // {
+        //     UserName = registerDto.Username.ToLower(),
+        //     PasswordHash = hmacsha512.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
+        //     PasswordSalt = hmacsha512.Key
+        // };
 
-        return new UserDto
-        {
-            Username = appUser.UserName,
-            Token = tokenService.CreateToken(appUser)
-        };
+        // dataContext.Users.Add(appUser);
+        // await dataContext.SaveChangesAsync();
+
+        // return new UserDto
+        // {
+        //     Username = appUser.UserName,
+        //     Token = tokenService.CreateToken(appUser)
+        // };
     }
 
     [HttpPost("login")] // api/account/login

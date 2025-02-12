@@ -1,4 +1,5 @@
 using API.Data;
+using API.Helpers;
 using API.Interfaces;
 using API.Services;
 using Microsoft.EntityFrameworkCore;
@@ -7,17 +8,19 @@ namespace API.Extensions;
 
 public static class ApplicationServiceExtensions
 {
-    public static IServiceCollection AddApplicationServices(this IServiceCollection serviceCollection, IConfiguration configuration)
+    public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config)
     {
-        serviceCollection.AddControllers();
-        serviceCollection.AddDbContext<DataContext>(opt =>
+        services.AddControllers();
+        services.AddDbContext<DataContext>(opt =>
         {
-            opt.UseSqlite(configuration.GetConnectionString("DefaultConnection"));
+            opt.UseSqlite(config.GetConnectionString("DefaultConnection"));
         });
         
-        serviceCollection.AddCors();
-        serviceCollection.AddScoped<ITokenService, TokenService>();
+        services.AddCors();
+        services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         
-        return serviceCollection;
+        return services;
     }
 }
